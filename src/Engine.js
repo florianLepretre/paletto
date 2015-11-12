@@ -42,42 +42,52 @@ var Engine = function () { // jshint ignore:line
         balls -= 1;
     };
 
-    var getHorizontalNeighbors = function (i, j) {
-        var sum = 0;
-
-        if (board[i][j - 1]) {
+    var getLeft = function (i, j) {
+        if (j - 1 >= 0) {
             if (board[i][j - 1] !== 0) {
-                sum += 1;
+                return 1;
             }
         }
-        if (board[i][j + 1]) {
-            if (board[i][j + 1] !== 0) {
-                sum += 1;
-            }
-        }
-
-        return sum;
+        return 0;
     };
 
-    var getVerticalNeighbors = function (i, j) {
-        var sum = 0;
+    var getRight = function (i, j) {
+        if (j + 1 < size) {
+            if (board[i][j + 1] !== 0) {
+                return 1;
+            }
+        }
+        return 0;
+    };
 
-        if (board[i - 1]) {
+    var getUp = function (i, j) {
+        if (i - 1 >= 0) {
             if (board[i - 1][j] !== 0) {
-                sum += 1;
+                return 1;
             }
         }
-        if (board[i + 1]) {
-            if (board[i + 1][j] !== 0) {
-                sum += 1;
-            }
-        }
+        return 0;
+    };
 
-        return sum;
+    var getDown = function (i, j) {
+        if (i + 1 < size) {
+            if (board[i + 1][j] !== 0) {
+                return 1;
+            }
+        }
+        return 0;
     };
 
     var getNeighborCount = function (i, j) {
-        return getHorizontalNeighbors(i, j) + getVerticalNeighbors(i, j);
+        return getUp(i, j) + getDown(i, j) + getLeft(i, j) + getRight(i, j);
+    };
+
+    var updatePossibleColors = function (possibleColors, i, j) {
+        if (possibleColors.indexOf(convertColor(board[i][j])) < 0) {
+            if (getNeighborCount(i, j) <= 2) {
+                possibleColors.push(convertColor(board[i][j]));
+            }
+        }
     };
 
     var init = function () {
@@ -135,11 +145,7 @@ var Engine = function () { // jshint ignore:line
 
         for (i = 0; i < size; ++i) {
             for (j = 0; j < size; ++j) {
-                if (possibleColors.indexOf(convertColor(board[i][j])) < 0) {
-                    if (getNeighborCount(i, j) <= 2) {
-                        possibleColors.push(convertColor(board[i][j]));
-                    }
-                }
+                updatePossibleColors(possibleColors, i, j);
             }
         }
 
