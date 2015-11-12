@@ -46,3 +46,17 @@ PalettoTestCase.prototype.testStory4 = function () {
     engine.play('F6');
     assertEquals(engine.getPlayerScore(1, 'bla'), 2);
 };
+
+PalettoTestCase.prototype.testStory5 = function () {
+    var engine = new Engine();
+
+    engine.initIntermediateState();
+
+    assertTrue(engine.isAllowed('D1'));
+    assertTrue(engine.isAllowed('F1'));
+    assertTrue(engine.isAllowed('E3'));
+    assertTrue(engine.isAllowed('A4'));
+    assertTrue(engine.isAllowed('B5'));
+    assertTrue(engine.isAllowed('C6'));
+    assertFalse(engine.isAllowed('C3'));
+};
