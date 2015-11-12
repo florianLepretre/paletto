@@ -1,4 +1,4 @@
-var Engine = function () {
+var Engine = function () { // jshint ignore:line
     'use strict';
 
     // private attributes and methods
@@ -7,7 +7,6 @@ var Engine = function () {
         balls = 36,
         colors = {bla: 1, gre: 2, whi: 3, blu: 4, red: 5, yel: 6},
         player1,
-        player2,
         currentPlayer;
 
     var convertCoords = function (coords) {
@@ -18,11 +17,12 @@ var Engine = function () {
     };
 
     var updateScore = function (pickedColor) {
-        var col, color;
+        var key, color;
 
-        for (col in colors) {
-            if (pickedColor === colors[col]) {
-                color = col;
+        for (key in colors) {
+            //noinspection JSUnfilteredForInLoop
+            if (pickedColor === colors[key]) {
+                color = key;
                 break;
             }
         }
@@ -30,7 +30,7 @@ var Engine = function () {
         currentPlayer[color] += 1;
     };
 
-    var pick = function (coords){
+    var pick = function (coords) {
         var pickedColor = board[coords.lin][coords.col];
 
         updateScore(pickedColor);
@@ -40,7 +40,6 @@ var Engine = function () {
 
     var init = function () {
         player1 = {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0};
-        player2 = {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0};
         currentPlayer = player1;
 
         board = [
