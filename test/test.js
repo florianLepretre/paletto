@@ -20,3 +20,13 @@ PalettoTestCase.prototype.testStory2 = function () {
 
     assertEquals(engine.getCase(5,0), engine.getColor('yel'));
 };
+
+PalettoTestCase.prototype.testStory3 = function () {
+    var engine = new Engine();
+
+    engine.play('A5');
+
+    assertEquals(engine.getCase(5,0), 0);
+    assertEquals(engine.getBalls(), 35);
+    assertEquals(engine.getPlayerScore('yel'), 1);
+};
