@@ -5,29 +5,33 @@ var Engine = function () { // jshint ignore:line
     var board,
         size = 6,
         balls = 36,
-        colors = {bla: 1, gre: 2, whi: 3, blu: 4, red: 5, yel: 6},
-        player1,
+        colors = {none: 0, bla: 1, gre: 2, whi: 3, blu: 4, red: 5, yel: 6},
+        players,
         currentPlayer;
 
+    var convertColor = function (colorCode) {
+        var key, color;
+
+        for (key in colors) {
+            //noinspection JSUnfilteredForInLoop
+            if (colorCode === colors[key]) {
+                color = key;
+                break;
+            }
+        }
+
+        return color;
+    };
+
     var convertCoords = function (coords) {
-        var line   = coords.charCodeAt(1) - 48;
+        var line = coords.charCodeAt(1) - 49;
         var column = coords.charCodeAt(0) - 65;
 
         return {lin: line, col: column};
     };
 
     var updateScore = function (pickedColor) {
-        var key, color;
-
-        for (key in colors) {
-            //noinspection JSUnfilteredForInLoop
-            if (pickedColor === colors[key]) {
-                color = key;
-                break;
-            }
-        }
-
-        currentPlayer[color] += 1;
+        players[currentPlayer][convertColor(pickedColor)] += 1;
     };
 
     var pick = function (coords) {
@@ -38,9 +42,50 @@ var Engine = function () { // jshint ignore:line
         balls -= 1;
     };
 
+    var getHorizontalNeighbors = function (i, j) {
+        var sum = 0;
+
+        if (board[i][j - 1]) {
+            if (board[i][j - 1] !== 0) {
+                sum += 1;
+            }
+        }
+        if (board[i][j + 1]) {
+            if (board[i][j + 1] !== 0) {
+                sum += 1;
+            }
+        }
+
+        return sum;
+    };
+
+    var getVerticalNeighbors = function (i, j) {
+        var sum = 0;
+
+        if (board[i - 1]) {
+            if (board[i - 1][j] !== 0) {
+                sum += 1;
+            }
+        }
+        if (board[i + 1]) {
+            if (board[i + 1][j] !== 0) {
+                sum += 1;
+            }
+        }
+
+        return sum;
+    };
+
+    var getNeighborCount = function (i, j) {
+        return getHorizontalNeighbors(i, j) + getVerticalNeighbors(i, j);
+    };
+
     var init = function () {
-        player1 = {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0};
-        currentPlayer = player1;
+        players = [
+            {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0},
+            {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0}
+        ];
+        currentPlayer = 0;
 
         board = [
             [colors.bla, colors.gre, colors.whi, colors.blu, colors.red, colors.whi],
@@ -55,6 +100,10 @@ var Engine = function () { // jshint ignore:line
     // public methods
     this.play = function (coords) {
         pick(convertCoords(coords));
+    };
+
+    this.changeTurn = function () {
+        currentPlayer = (currentPlayer === 0) ? 1 : 0;
     };
 
     this.getBalls = function () {
@@ -73,8 +122,28 @@ var Engine = function () { // jshint ignore:line
         return colors[color];
     };
 
-    this.getPlayerScore = function (color) {
-        return currentPlayer[color];
+    this.getPlayerScore = function (player, color) {
+        if (player === 1) {
+            return players[player][color];
+        }
+        return players[player][color];
+    };
+
+    this.getPossibleColors = function () {
+        var i, j;
+        var possibleColors = [];
+
+        for (i = 0; i < size; ++i) {
+            for (j = 0; j < size; ++j) {
+                if (possibleColors.indexOf(convertColor(board[i][j])) < 0) {
+                    if (getNeighborCount(i, j) <= 2) {
+                        possibleColors.push(convertColor(board[i][j]));
+                    }
+                }
+            }
+        }
+
+        return possibleColors;
     };
 
     init();
