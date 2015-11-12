@@ -14,3 +14,9 @@ PalettoTestCase.prototype.testStory1 = function () {
         }
     }
 };
+
+PalettoTestCase.prototype.testStory2 = function () {
+    var engine = new Engine();
+
+    assertEquals(engine.getCase(5,0), engine.getColor('yel'));
+};
