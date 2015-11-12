@@ -28,5 +28,19 @@ PalettoTestCase.prototype.testStory3 = function () {
 
     assertEquals(engine.getCase(5,0), 0);
     assertEquals(engine.getBalls(), 35);
-    assertEquals(engine.getPlayerScore('yel'), 1);
+    assertEquals(engine.getPlayerScore(1, 'yel'), 1);
+};
+
+PalettoTestCase.prototype.testStory4 = function () {
+    var engine = new Engine();
+
+    var possibleColors = engine.getPossibleColors();
+    assertTrue(possibleColors.indexOf('bla') !== -1);
+    assertTrue(possibleColors.indexOf('whi') !== -1);
+    assertTrue(possibleColors.indexOf('blu') !== -1);
+
+    engine.changeTurn();
+    engine.play('A1');
+    engine.play('A6');
+    assertEquals(engine.getPlayerScore(2, 'bla'), 2);
 };
