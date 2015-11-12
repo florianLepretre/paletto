@@ -30,5 +30,9 @@ var Engine = function () {
         return board[line][column];
     };
 
+    this.getColor = function (color) {
+        return colors[color];
+    };
+
     init();
 };
