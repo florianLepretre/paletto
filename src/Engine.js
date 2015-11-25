@@ -7,7 +7,8 @@ var Engine = function () { // jshint ignore:line
         balls = 36,
         colors = {none: 0, bla: 1, gre: 2, whi: 3, blu: 4, red: 5, yel: 6},
         players,
-        currentPlayer;
+        currentPlayer,
+        winner;
 
     var convertColor = function (colorCode) {
         var key, color;
@@ -38,7 +39,7 @@ var Engine = function () { // jshint ignore:line
         var pickedColor = board[coords.lin][coords.col];
 
         updateScore(pickedColor);
-        board[coords.lin][coords.col] = 0;
+        board[coords.lin][coords.col] = colors.none;
         balls -= 1;
     };
 
@@ -157,12 +158,22 @@ var Engine = function () { // jshint ignore:line
         return checkPositions(positions, lin, col);
     };
 
+    var checkVictory = function () {
+        for (var color in players[currentPlayer]) {
+            if (players[currentPlayer][color] == 6) {
+                winner = currentPlayer;
+                return;
+            }
+        }
+    };
+
     var init = function () {
         players = [
             {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0},
             {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0}
         ];
         currentPlayer = 0;
+        winner = false;
 
         board = [
             [colors.bla, colors.gre, colors.whi, colors.blu, colors.red, colors.whi],
@@ -190,6 +201,7 @@ var Engine = function () { // jshint ignore:line
         if (this.isAllowed(coords)) {
             pick(convertCoords(coords));
         }
+        checkVictory();
     };
 
     this.changeTurn = function () {
@@ -213,9 +225,6 @@ var Engine = function () { // jshint ignore:line
     };
 
     this.getPlayerScore = function (player, color) {
-        if (player === 1) {
-            return players[player][color];
-        }
         return players[player][color];
     };
 
@@ -244,11 +253,15 @@ var Engine = function () { // jshint ignore:line
             return checkGameConsistency(convertedCoords.lin, convertedCoords.col);
         }
 
-        return true;
+        return (this.getCase(convertedCoords.lin, convertedCoords.col) !== colors.none);
     };
 
     this.getIntermediateState = function () {
         initIntermediateBoard();
+    };
+
+    this.getWinner = function () {
+        return winner;
     };
 
     init();
