@@ -90,6 +90,73 @@ var Engine = function () { // jshint ignore:line
         }
     };
 
+    var getNeigborVerticalPositions = function (lin, col) {
+        var verticalPosition = '';
+
+        if (getUp(lin, col)) {
+            verticalPosition += 'u';
+        }
+        if (getDown(lin, col)) {
+            verticalPosition += 'd';
+        }
+
+        return verticalPosition;
+    };
+
+    var getNeigborHorizontalPositions = function (lin, col) {
+        var horizontalPosition = '';
+
+        if (getLeft(lin, col)) {
+            horizontalPosition += 'l';
+        }
+        if (getRight(lin, col)) {
+            horizontalPosition += 'r';
+        }
+
+        return horizontalPosition;
+    };
+
+    var getNeighborPositions = function (lin, col) {
+        return (getNeigborVerticalPositions(lin, col) + getNeigborHorizontalPositions(lin, col));
+    };
+
+    var checkUpPositions = function (pos, lin, col) {
+        if (pos === 'ur') {
+            return board[lin - 1][col + 1] !== colors.none;
+        }
+        if (pos === 'ul') {
+            return board[lin - 1][col - 1] !== colors.none;
+        }
+        return null;
+    };
+
+    var checkDownPositions = function (pos, lin, col) {
+        if (pos === 'dr') {
+            return board[lin + 1][col + 1] !== colors.none;
+        }
+        return board[lin + 1][col - 1] !== colors.none;
+    };
+
+    var checkPositions = function (pos, lin, col) {
+        var check = checkUpPositions(pos, lin, col);
+
+        if (check !== null) {
+            return check;
+        }
+
+        return checkDownPositions(pos, lin, col);
+    };
+
+    var checkGameConsistency = function (lin, col) {
+        var positions = getNeighborPositions(lin, col);
+
+        if (positions === 'ud' || positions === 'lr') {
+            return false;
+        }
+
+        return checkPositions(positions, lin, col);
+    };
+
     var init = function () {
         players = [
             {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0},
@@ -107,9 +174,22 @@ var Engine = function () { // jshint ignore:line
         ];
     };
 
+    var initIntermediateBoard = function () {
+        board = [
+            [colors.none, colors.none, colors.none, colors.blu, colors.red, colors.whi],
+            [colors.none, colors.none, colors.none, colors.red, colors.yel, colors.none],
+            [colors.none, colors.none, colors.blu, colors.whi, colors.bla, colors.none],
+            [colors.red, colors.bla, colors.red, colors.none, colors.none, colors.none],
+            [colors.none, colors.gre, colors.yel, colors.none, colors.none, colors.none],
+            [colors.none, colors.none, colors.bla, colors.none, colors.none, colors.none]
+        ];
+    };
+
     // public methods
     this.play = function (coords) {
-        pick(convertCoords(coords));
+        if (this.isAllowed(coords)) {
+            pick(convertCoords(coords));
+        }
     };
 
     this.changeTurn = function () {
@@ -150,6 +230,25 @@ var Engine = function () { // jshint ignore:line
         }
 
         return possibleColors;
+    };
+
+    this.isAllowed = function (coords) {
+        var convertedCoords = convertCoords(coords);
+        var neighbours = getNeighborCount(convertedCoords.lin, convertedCoords.col);
+
+        if (neighbours >= 3) {
+            return false;
+        }
+
+        if (neighbours === 2) {
+            return checkGameConsistency(convertedCoords.lin, convertedCoords.col);
+        }
+
+        return true;
+    };
+
+    this.getIntermediateState = function () {
+        initIntermediateBoard();
     };
 
     init();

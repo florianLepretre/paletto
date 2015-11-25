@@ -50,7 +50,7 @@ PalettoTestCase.prototype.testStory4 = function () {
 PalettoTestCase.prototype.testStory5 = function () {
     var engine = new Engine();
 
-    engine.initIntermediateState();
+    engine.getIntermediateState();
 
     assertTrue(engine.isAllowed('D1'));
     assertTrue(engine.isAllowed('F1'));
