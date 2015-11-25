@@ -158,11 +158,22 @@ var Engine = function () { // jshint ignore:line
         return checkPositions(positions, lin, col);
     };
 
-    var checkVictory = function () {
-        for (var color in players[currentPlayer]) {
-            if (players[currentPlayer][color] == 6) {
+    var checkScore = function () {
+        var color;
+        for (color in players[currentPlayer]) {
+            //noinspection JSUnfilteredForInLoop
+            if (players[currentPlayer][color] === 6) {
                 winner = currentPlayer;
                 return;
+            }
+        }
+    };
+
+    var checkVictory = function () {
+        checkScore();
+        if (!winner) {
+            if (balls === 0) {
+                winner = currentPlayer;
             }
         }
     };
