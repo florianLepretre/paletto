@@ -78,3 +78,30 @@ PalettoTestCase.prototype.testStory6 = function () {
 
     assertTrue(engine.getWinner() == 0);
 };
+
+PalettoTestCase.prototype.testStory7 = function () {
+    var engine = new Engine();
+
+    engine.play('A1'); engine.play('F6'); engine.changeTurn();
+    engine.play('A2'); engine.play('A6'); engine.changeTurn();
+    engine.play('A5'); engine.play('F1'); engine.changeTurn();
+    engine.play('E6'); engine.play('B1'); engine.play('F5'); engine.changeTurn();
+    engine.play('A3'); engine.play('F2'); engine.changeTurn();
+    engine.play('C1'); engine.play('F4'); engine.changeTurn();
+    engine.play('E1'); engine.play('D6'); engine.play('A4'); engine.play('F3'); engine.changeTurn();
+    engine.play('D1'); engine.play('B6'); engine.changeTurn();
+    engine.play('E2'); engine.play('E5'); engine.changeTurn();
+    engine.play('C6'); engine.play('D5'); engine.play('E3'); engine.changeTurn();
+    engine.play('B5'); engine.changeTurn();
+    engine.play('D2'); engine.changeTurn();
+    engine.play('B2'); engine.play('D3'); engine.changeTurn();
+    engine.play('E4'); engine.changeTurn();
+    engine.play('C5'); engine.play('B3'); engine.changeTurn();
+    engine.play('D4'); engine.play('C2'); engine.changeTurn();
+    engine.play('C3'); engine.changeTurn();
+    engine.play('B4'); engine.changeTurn();
+    engine.play('C4');
+
+    assertTrue(engine.getBalls() == 0);
+    assertTrue(engine.getWinner() == 0);
+};
