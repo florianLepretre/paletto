@@ -3,7 +3,7 @@
 var PalettoTestCase = TestCase("PalettoTestCase");
 
 PalettoTestCase.prototype.testStory1 = function () {
-    var engine = new Engine();
+    var engine = new Engine(6);
 
     var size = engine.getSize();
 
@@ -16,13 +16,13 @@ PalettoTestCase.prototype.testStory1 = function () {
 };
 
 PalettoTestCase.prototype.testStory2 = function () {
-    var engine = new Engine();
+    var engine = new Engine(6);
 
     assertEquals(engine.getCase(5,0), engine.getColor('yel'));
 };
 
 PalettoTestCase.prototype.testStory3 = function () {
-    var engine = new Engine();
+    var engine = new Engine(6);
 
     engine.play('A6');
 
@@ -32,7 +32,7 @@ PalettoTestCase.prototype.testStory3 = function () {
 };
 
 PalettoTestCase.prototype.testStory4 = function () {
-    var engine = new Engine();
+    var engine = new Engine(6);
 
     engine.play('A6');
 
@@ -48,7 +48,7 @@ PalettoTestCase.prototype.testStory4 = function () {
 };
 
 PalettoTestCase.prototype.testStory5 = function () {
-    var engine = new Engine();
+    var engine = new Engine(6);
 
     engine.getIntermediateState();
 
@@ -62,7 +62,7 @@ PalettoTestCase.prototype.testStory5 = function () {
 };
 
 PalettoTestCase.prototype.testStory6 = function () {
-    var engine = new Engine();
+    var engine = new Engine(6);
 
     engine.play('A1'); engine.play('F6'); engine.changeTurn();
     engine.play('B1'); engine.play('E6'); engine.play('F5'); engine.changeTurn();
@@ -80,7 +80,7 @@ PalettoTestCase.prototype.testStory6 = function () {
 };
 
 PalettoTestCase.prototype.testStory7 = function () {
-    var engine = new Engine();
+    var engine = new Engine(6);
 
     engine.play('A1'); engine.play('F6'); engine.changeTurn();
     engine.play('A2'); engine.play('A6'); engine.changeTurn();

@@ -1,12 +1,12 @@
-var Engine = function () { // jshint ignore:line
+var Engine = function (boardSize) { // jshint ignore:line
     'use strict';
 
     // private attributes and methods
     var board,
-        size = 6,
-        balls = 36,
-        colors = {none: 0, bla: 1, gre: 2, whi: 3, blu: 4, red: 5, yel: 6},
+        size = boardSize,
+        balls,
         players,
+        colors,
         currentPlayer,
         winner;
 
@@ -178,12 +178,77 @@ var Engine = function () { // jshint ignore:line
         }
     };
 
-    var init = function () {
+    var create2DArray = function () {
+        var i;
+        board = new Array(size);
+        for (i = 0; i < size; ++i) {
+            board[i] = new Array(size);
+        }
+    };
+
+    var isPossible = function (pickedColor, lin, col) {
+        var possible = true;
+
+        if (lin > 0) {
+            possible = possible && (board[lin - 1][col] !== pickedColor);
+        }
+        if (col > 0) {
+            possible = possible && (board[lin][col - 1] !== pickedColor);
+        }
+
+        return possible;
+    };
+
+    var putRandomColor = function (lin, col, colorCount) {
+        var pickedColor, fail = 0;
+
+        do {
+            fail += 1;
+            pickedColor = Math.floor((Math.random() * 8)) + 1;
+        } while (!((colorCount[convertColor(pickedColor)] > 0 && isPossible(pickedColor, lin, col)) || fail >= 100));
+
+        if (fail >= 100) {
+            return true;
+        }
+
+        board[lin][col] = colors[convertColor(pickedColor)];
+        colorCount[convertColor(pickedColor)] -= 1;
+
+        return false;
+    };
+
+    var initRandomBoard = function () {
+        var lin, col;
+        var fail = false;
+        var colorCount = {};
+
+        create2DArray();
+
+        do {
+            colorCount = {bla: 8, gre: 8, whi: 8, blu: 8, red: 8, yel: 8, pin: 8, ora: 8};
+
+            for (lin = 0; lin < size; ++lin) {
+                for (col = 0; col < size; ++col) {
+                    fail = putRandomColor(lin, col, colorCount);
+                    if (fail) {
+                        break;
+                    }
+                }
+                if (fail) {
+                    break;
+                }
+            }
+        } while (fail);
+    };
+
+    var init6 = function () {
         players = [
             {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0},
             {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0}
         ];
         currentPlayer = 0;
+        balls = 36;
+        colors = {none: 0, bla: 1, gre: 2, whi: 3, blu: 4, red: 5, yel: 6};
         winner = false;
 
         board = [
@@ -194,6 +259,19 @@ var Engine = function () { // jshint ignore:line
             [colors.whi, colors.gre, colors.yel, colors.bla, colors.yel, colors.gre],
             [colors.yel, colors.blu, colors.bla, colors.red, colors.gre, colors.bla]
         ];
+    };
+
+    var init9 = function () {
+        players = [
+            {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0, pin: 0, ora: 0},
+            {bla: 0, gre: 0, whi: 0, blu: 0, red: 0, yel: 0, pin: 0, ora: 0}
+        ];
+        currentPlayer = 0;
+        balls = 36;
+        colors = {none: 0, bla: 1, gre: 2, whi: 3, blu: 4, red: 5, yel: 6, pin: 7, ora: 8};
+        winner = false;
+
+        initRandomBoard();
     };
 
     var initIntermediateBoard = function () {
@@ -275,5 +353,9 @@ var Engine = function () { // jshint ignore:line
         return winner;
     };
 
-    init();
+    if (size === 6) {
+        init6();
+    } else if (size === 8) {
+        init9();
+    }
 };
