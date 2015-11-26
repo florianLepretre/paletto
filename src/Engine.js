@@ -199,13 +199,18 @@ var Engine = function (boardSize) { // jshint ignore:line
         return possible;
     };
 
+    var stopPuttingRandomColor = function (colorCount, pickedColor, lin, col, fail) {
+        var stop = (colorCount[convertColor(pickedColor)] > 0 && isPossible(pickedColor, lin, col));
+        return stop || fail >= 100;
+    };
+
     var putRandomColor = function (lin, col, colorCount) {
         var pickedColor, fail = 0;
 
         do {
             fail += 1;
             pickedColor = Math.floor((Math.random() * 8)) + 1;
-        } while (!((colorCount[convertColor(pickedColor)] > 0 && isPossible(pickedColor, lin, col)) || fail >= 100));
+        } while (!(stopPuttingRandomColor(colorCount, pickedColor, lin, col, fail)));
 
         if (fail >= 100) {
             return true;
@@ -217,27 +222,43 @@ var Engine = function (boardSize) { // jshint ignore:line
         return false;
     };
 
+    var initRandomLine = function (lin, colorCount) {
+        var col,
+            fail;
+
+        for (col = 0; col < size; ++col) {
+            fail = putRandomColor(lin, col, colorCount);
+            if (fail) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    var createRandomBoard = function (colorCount) {
+        var lin,
+            fail;
+
+        for (lin = 0; lin < size; ++lin) {
+            fail = initRandomLine(lin, colorCount);
+            if (fail) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
     var initRandomBoard = function () {
-        var lin, col;
-        var fail = false;
-        var colorCount = {};
+        var fail = false,
+            colorCount;
 
         create2DArray();
 
         do {
             colorCount = {bla: 8, gre: 8, whi: 8, blu: 8, red: 8, yel: 8, pin: 8, ora: 8};
-
-            for (lin = 0; lin < size; ++lin) {
-                for (col = 0; col < size; ++col) {
-                    fail = putRandomColor(lin, col, colorCount);
-                    if (fail) {
-                        break;
-                    }
-                }
-                if (fail) {
-                    break;
-                }
-            }
+            fail = createRandomBoard(colorCount);
         } while (fail);
     };
 
