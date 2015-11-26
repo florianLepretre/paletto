@@ -15,3 +15,28 @@ PalettoTestCase64.prototype.testStory8 = function () {
         }
     }
 };
+
+PalettoTestCase64.prototype.testStory9 = function () {
+    var engine = new Engine(8);
+
+    var possibleColors, possibleCoords;
+
+    while (engine.getWinner() == false) {
+        possibleColors = engine.getPossibleColors();
+        possibleCoords = engine.getPossibleCoordinates();
+
+        var color = possibleColors[Math.floor(Math.random() * possibleColors.length)];
+
+        for (var coordinates in possibleCoords) {
+            var line = possibleCoords[coordinates].charCodeAt(1) - 49;
+            var column = possibleCoords[coordinates].charCodeAt(0) - 65;
+
+            if (engine.getCase(line, column) === engine.getColor(color)){
+                engine.play(possibleCoords[coordinates]);
+            }
+        }
+        engine.changeTurn();
+    }
+
+    assertTrue(engine.getWinner() !== false);
+};

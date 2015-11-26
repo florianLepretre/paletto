@@ -31,6 +31,13 @@ var Engine = function (boardSize) { // jshint ignore:line
         return {lin: line, col: column};
     };
 
+    var coordinatesToChar = function (lin, col) {
+        var line = lin + 49;
+        var column = col + 65;
+
+        return (String.fromCharCode(column) + String.fromCharCode(line));
+    };
+
     var updateScore = function (pickedColor) {
         players[currentPlayer][convertColor(pickedColor)] += 1;
     };
@@ -87,6 +94,14 @@ var Engine = function (boardSize) { // jshint ignore:line
         if (possibleColors.indexOf(convertColor(board[i][j])) < 0) {
             if (getNeighborCount(i, j) <= 2) {
                 possibleColors.push(convertColor(board[i][j]));
+            }
+        }
+    };
+
+    var updatePossibleCoordinates = function (possibleCoordinates, i, j) {
+        if (possibleCoordinates.indexOf(coordinatesToChar(i, j)) < 0) {
+            if (getNeighborCount(i, j) <= 2) {
+                possibleCoordinates.push(coordinatesToChar(i, j));
             }
         }
     };
@@ -349,6 +364,19 @@ var Engine = function (boardSize) { // jshint ignore:line
         }
 
         return possibleColors;
+    };
+
+    this.getPossibleCoordinates = function () {
+        var i, j;
+        var possibleCoordinates = [];
+
+        for (i = 0; i < size; ++i) {
+            for (j = 0; j < size; ++j) {
+                updatePossibleCoordinates(possibleCoordinates, i, j);
+            }
+        }
+
+        return possibleCoordinates;
     };
 
     this.isAllowed = function (coordinates) {
