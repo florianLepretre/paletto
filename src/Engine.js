@@ -24,9 +24,9 @@ var Engine = function () { // jshint ignore:line
         return color;
     };
 
-    var convertCoords = function (coords) {
-        var line = coords.charCodeAt(1) - 49;
-        var column = coords.charCodeAt(0) - 65;
+    var convertCoordinates = function (coordinates) {
+        var line = coordinates.charCodeAt(1) - 49;
+        var column = coordinates.charCodeAt(0) - 65;
 
         return {lin: line, col: column};
     };
@@ -35,11 +35,11 @@ var Engine = function () { // jshint ignore:line
         players[currentPlayer][convertColor(pickedColor)] += 1;
     };
 
-    var pick = function (coords) {
-        var pickedColor = board[coords.lin][coords.col];
+    var pick = function (coordinates) {
+        var pickedColor = board[coordinates.lin][coordinates.col];
 
         updateScore(pickedColor);
-        board[coords.lin][coords.col] = colors.none;
+        board[coordinates.lin][coordinates.col] = colors.none;
         balls -= 1;
     };
 
@@ -91,7 +91,7 @@ var Engine = function () { // jshint ignore:line
         }
     };
 
-    var getNeigborVerticalPositions = function (lin, col) {
+    var getNeighborVerticalPositions = function (lin, col) {
         var verticalPosition = '';
 
         if (getUp(lin, col)) {
@@ -104,7 +104,7 @@ var Engine = function () { // jshint ignore:line
         return verticalPosition;
     };
 
-    var getNeigborHorizontalPositions = function (lin, col) {
+    var getNeighborHorizontalPositions = function (lin, col) {
         var horizontalPosition = '';
 
         if (getLeft(lin, col)) {
@@ -118,7 +118,7 @@ var Engine = function () { // jshint ignore:line
     };
 
     var getNeighborPositions = function (lin, col) {
-        return (getNeigborVerticalPositions(lin, col) + getNeigborHorizontalPositions(lin, col));
+        return (getNeighborVerticalPositions(lin, col) + getNeighborHorizontalPositions(lin, col));
     };
 
     var checkUpPositions = function (pos, lin, col) {
@@ -208,9 +208,9 @@ var Engine = function () { // jshint ignore:line
     };
 
     // public methods
-    this.play = function (coords) {
-        if (this.isAllowed(coords)) {
-            pick(convertCoords(coords));
+    this.play = function (coordinates) {
+        if (this.isAllowed(coordinates)) {
+            pick(convertCoordinates(coordinates));
         }
         checkVictory();
     };
@@ -252,19 +252,19 @@ var Engine = function () { // jshint ignore:line
         return possibleColors;
     };
 
-    this.isAllowed = function (coords) {
-        var convertedCoords = convertCoords(coords);
-        var neighbours = getNeighborCount(convertedCoords.lin, convertedCoords.col);
+    this.isAllowed = function (coordinates) {
+        var convertedCoordinates = convertCoordinates(coordinates);
+        var neighbours = getNeighborCount(convertedCoordinates.lin, convertedCoordinates.col);
 
         if (neighbours >= 3) {
             return false;
         }
 
         if (neighbours === 2) {
-            return checkGameConsistency(convertedCoords.lin, convertedCoords.col);
+            return checkGameConsistency(convertedCoordinates.lin, convertedCoordinates.col);
         }
 
-        return (this.getCase(convertedCoords.lin, convertedCoords.col) !== colors.none);
+        return (this.getCase(convertedCoordinates.lin, convertedCoordinates.col) !== colors.none);
     };
 
     this.getIntermediateState = function () {
